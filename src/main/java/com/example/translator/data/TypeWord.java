@@ -1,4 +1,4 @@
-package com.example.translator;
+package com.example.translator.data;
 
 public enum TypeWord {
     ENGLISH,

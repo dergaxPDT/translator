@@ -1,4 +1,4 @@
-package com.example.translator;
+package com.example.translator.error;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,10 +11,10 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class RestResponseEntityExceptionHandler
+public class CustomRestExceptionHandler
         extends ResponseEntityExceptionHandler {
 
-    private static Logger logger = LogManager.getLogger(RestResponseEntityExceptionHandler.class);
+    private static Logger logger = LogManager.getLogger(CustomRestExceptionHandler.class);
 
 
     @ExceptionHandler(value
@@ -22,7 +22,7 @@ public class RestResponseEntityExceptionHandler
     protected ResponseEntity<Object> handleNotFound(
             RuntimeException ex, WebRequest request) {
         logger.error(ex);
-        String  bodyOfResponse = "This should be application specific";
+        String  bodyOfResponse = "Error: " + ex;
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }

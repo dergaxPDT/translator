@@ -1,4 +1,4 @@
-package com.example.translator;
+package com.example.translator.data;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -11,9 +11,19 @@ import lombok.Data;
 @Table
 public class TranslateDictionary {
     @Id
-    private Long id;
+    private String id;
     private String polishWord;
     private String englishWord;
+
+    public TranslateDictionary(String id, String polishWord, String englishWord) {
+        this.id = id;
+        this.polishWord = polishWord;
+        this.englishWord = englishWord;
+    }
+
+    public TranslateDictionary() {
+
+    }
 
     public String getPolishWord() {
         return polishWord;
@@ -31,11 +41,11 @@ public class TranslateDictionary {
         this.englishWord = englishWord;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 }
