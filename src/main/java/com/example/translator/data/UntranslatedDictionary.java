@@ -11,12 +11,18 @@ import lombok.Data;
 @Table
 public class UntranslatedDictionary {
     @Id
-    private Long id;
+    private String id;
     private String word;
     private TypeWord typeWord;
 
 
     public UntranslatedDictionary(String word, TypeWord typeWord) {
+        this.word = word;
+        this.typeWord = typeWord;
+    }
+
+    public UntranslatedDictionary(String id, String word, TypeWord typeWord) {
+        this.id = id;
         this.word = word;
         this.typeWord = typeWord;
     }
@@ -41,11 +47,11 @@ public class UntranslatedDictionary {
         this.typeWord = typeWord;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 }

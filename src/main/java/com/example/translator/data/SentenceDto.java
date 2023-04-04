@@ -1,4 +1,4 @@
-package com.example.translator.actions;
+package com.example.translator.data;
 
 import com.example.translator.data.TypeWord;
 

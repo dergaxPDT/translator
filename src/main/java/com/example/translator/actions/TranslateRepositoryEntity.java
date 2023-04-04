@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface TranslateRepositoryEntity extends JpaRepository<TranslateDictionary, Long> {
-    TranslateDictionary findByPolishWord(String polishWord);
-    TranslateDictionary findByEnglishWord(String englishWord);
+    Optional<TranslateDictionary> findByPolishWord(String polishWord);
+    Optional<TranslateDictionary> findByEnglishWord(String englishWord);
 }

@@ -163,6 +163,7 @@ if [ -z "$JAVA_HOME" ] ; then
   echo "Warning: JAVA_HOME environment variable is not set."
 fi
 
+# shellcheck disable=SC2034
 CLASSWORLDS_LAUNCHER=org.codehaus.plexus.classworlds.launcher.Launcher
 
 # traverses directory structure from process work directory to filesystem root
