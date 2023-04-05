@@ -11,7 +11,6 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-//@Service
 public class TranslateService {
 
     @Autowired
@@ -20,10 +19,16 @@ public class TranslateService {
     @Autowired
     private WordsUntranslatedRepositoryEntity wordsUntranslatedRepositoryEntity;
 
-    public String getTranslation(WordToTranslateDto dto) {
-        return dto.getTypeWord().equals(TypeWord.ENGLISH) ?
-                translateRepositoryEntity.findByEnglishWord(dto.getWord()).get().getPolishWord() :
-                translateRepositoryEntity.findByPolishWord(dto.getWord()).get().getEnglishWord();//TODO
+    public String getTranslation(String word) {
+        Optional<TranslateDictionary> englishWordO =translateRepositoryEntity.findByEnglishWord(word);
+        if (englishWordO.isPresent()) {
+            return englishWordO.get().getPolishWord();
+        }
+        Optional<TranslateDictionary> polishWordO = translateRepositoryEntity.findByPolishWord(word);
+        if (polishWordO.isPresent()) {
+            return polishWordO.get().getEnglishWord();
+        }
+        throw new NotFoundException("No translation");
     }
 
     public TranslateDictionary createTranslation(TranslateDictionaryDto newTranslation) {
@@ -122,6 +127,8 @@ public class TranslateService {
             contLengthEng = contLengthEng + dictionary.getEnglishWord().length();
         }
         int sizeUntranslatedWords = wordsUntranslatedRepositoryEntity.findAll().size();
-        return new ReportDto(sizeAll, toTenEng.get(), toTwentyEng.get(), overTwentyEng.get(), toTenPl.get(), toTwentyPl.get(), overTwentyPl.get(), contLengthEng / sizeAll, contLengthPl / sizeAll, sizeUntranslatedWords);
+        Double averageEngWord =  (sizeAll == 0 ? 0 : (double) contLengthEng / (double) sizeAll);
+        Double averagePlWord = sizeAll == 0 ? 0 : (double) contLengthPl / (double) sizeAll;
+        return new ReportDto(sizeAll, toTenEng.get(), toTwentyEng.get(), overTwentyEng.get(), toTenPl.get(), toTwentyPl.get(), overTwentyPl.get(), averageEngWord, averagePlWord, sizeUntranslatedWords);
     }
 }

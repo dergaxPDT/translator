@@ -1,16 +1,18 @@
 package com.example.translator.actions;
 
+import be.quodlibet.boxable.*;
 import com.example.translator.data.*;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import java.io.File;
 
-import javax.print.attribute.standard.MediaTray;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 @RestController
@@ -21,8 +23,8 @@ public class TranslatorController {
     private TranslateService translateService;
 
     @GetMapping
-    String getTranslation(@RequestBody WordToTranslateDto wordToTranslateDto){
-        return translateService.getTranslation(wordToTranslateDto);
+    String getTranslation(@RequestParam String word){
+        return translateService.getTranslation(word);
     }
 
     @PostMapping
@@ -47,20 +49,24 @@ public class TranslatorController {
 
     @PostMapping( value = "/report/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
     byte[] getReportPdf() throws IOException {
-        PDDocument document = new PDDocument();
-        PDPage page = new PDPage();
-        document.addPage(page);
-        PDPageContentStream contentStream = new PDPageContentStream(document, page);
 
-        contentStream.setFont(PDType1Font.COURIER, 12);
-        contentStream.beginText();
-        contentStream.showText("Hello World");
-        contentStream.endText();
-        contentStream.close();
+        String pathname = "target/tmp.pdf";
 
-//        document.save("pdfBoxHelloWorld.pdf");
-        document.close();
-        return document.t;
-//        return translateService.getReport();
+        ReportDto reportDto = translateService.getReport();
+        PdfService.createPdf(pathname, reportDto);
+
+        try {
+            FileInputStream fis= new FileInputStream(new File(pathname));
+            byte[] targetArray = new byte[fis.available()];
+            fis.read(targetArray);
+            return targetArray;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
+
+
 }
